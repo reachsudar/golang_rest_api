@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-	"rest-api/service"
+	service "rest-api/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,10 +30,8 @@ func New(service service.EmployeeInterface) EmployeeController {
 
 // GetAll Controller
 func (c *controller) GetAll(ctx *gin.Context) error {
-	employees, err := c.service.GetAll(ctx)
-	if err != nil {
-		return err
-	}
+	employees := c.service.GetAll(ctx)
+
 	data := gin.H{
 		"employees": employees,
 	}
@@ -43,10 +41,8 @@ func (c *controller) GetAll(ctx *gin.Context) error {
 
 // GetbyId Controller
 func (c *controller) GetById(ctx *gin.Context) error {
-	employee, err := c.service.GetById(ctx)
-	if err != nil {
-		return err
-	}
+	employee := c.service.GetById(ctx) //
+
 	ctx.JSON(http.StatusOK, employee)
 	return nil
 }
@@ -57,6 +53,9 @@ func (c *controller) Save(ctx *gin.Context) error {
 	if err != nil {
 		return err
 	}
+	ctx.JSON(http.StatusCreated, gin.H{
+		"Message": "New Employee Added",
+	})
 	return nil
 }
 
@@ -66,6 +65,9 @@ func (c *controller) Update(ctx *gin.Context) error {
 	if err != nil {
 		return err
 	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"Message": "Updated Employee Details",
+	})
 	return nil
 }
 

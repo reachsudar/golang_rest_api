@@ -10,7 +10,7 @@ import (
 
 var DB *sql.DB
 
-func Connect() {
+func Connect() mysql.Config {
 	cfg := mysql.Config{
 		User:                 "root",
 		Passwd:               "rootroot",
@@ -30,5 +30,6 @@ func Connect() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
+	return cfg
 
 }

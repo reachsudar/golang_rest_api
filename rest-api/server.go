@@ -10,31 +10,45 @@ import (
 )
 
 var (
-	empRepository repository.EmployeeRepository = repository.NewRepository()
-
+	empRepository repository.EmployeeRepository = &repository.Database{}
 	empInterface  service.EmployeeInterface     = service.New(empRepository)
-	empController controller.EmployeeController = controller.New(empInterface)
+	EmpController controller.EmployeeController = controller.New(empInterface)
 )
 
+var Repo repository.EmployeeRepository
+
+func init() {
+	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
+	if err != nil {
+		panic(nil)
+	}
+	Repo = repo
+}
+
 func main() {
+	//connect to db
 	configdb.Connect()
+
+	// set router
 	r := gin.Default()
 
+	//Register the Handlers
+
 	r.GET("/employees", func(c *gin.Context) {
-		empController.GetAll(c)
+		EmpController.GetAll(c)
 	})
 	r.GET("/employees/:id", func(c *gin.Context) {
-		empController.GetById(c)
+		EmpController.GetById(c)
 	})
 	r.POST("/employees", func(c *gin.Context) {
-		empController.Save(c)
+		EmpController.Save(c)
 	})
 	r.PUT("/employees/:id", func(c *gin.Context) {
-		empController.Update(c)
+		EmpController.Update(c)
 	})
 	r.DELETE("/employees/:id", func(c *gin.Context) {
-		empController.Delete(c)
+		EmpController.Delete(c)
 	})
 
-	r.Run()
+	r.Run("localhost:8888")
 }
