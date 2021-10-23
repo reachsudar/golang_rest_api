@@ -6,6 +6,7 @@ import (
 	repository "rest-api/Repository"
 	"rest-api/configdb"
 	entity "rest-api/entity"
+	"strconv"
 	"testing"
 	"time"
 
@@ -56,12 +57,57 @@ func TestGetAll(t *testing.T) {
 		"22  yendon road", "carnegie", "vic", 3030, 9876543, 230000.00)
 
 	mock.ExpectQuery(query).WillReturnRows(rows)
-	// w := httptest.NewRecorder()
-	// gin.SetMode(gin.TestMode)
-	// c, _ := gin.CreateTestContext(w)
 
 	employees := repo.GetAll()
-	//assert.NoError(t, err)
+
 	assert.NotEmpty(t, employees)
+
+}
+func TestGetEmployeeByID(t *testing.T) {
+	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_, mock := NewMock()
+	query := "Select (.+) from employees where id = ?"
+	rows := sqlmock.NewRows([]string{"id", "firstname", "middlename", "lastname", "gender", "salary",
+		"dob", "email", "phone", "Address1", "address2", "state", "postcode", "tfn", "super"}).AddRow(&emp.ID, &emp.FirstName, &emp.MiddleName, &emp.LastName,
+		&emp.Gender, &emp.Salary, &emp.DOB, &emp.Email, &emp.Phone, &emp.AddressLine1,
+		&emp.AddressLine2, &emp.State, &emp.PostCode, &emp.TFN, &emp.SuperBalance)
+
+	mock.ExpectQuery(query).WillReturnRows(rows)
+	ID := strconv.Itoa(emp.ID)
+	employee := repo.GetById(ID)
+	assert.NotNil(t, employee)
+
+}
+func TestAddEmployee(t *testing.T) {
+	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_, mock := NewMock()
+	query := "INSERT INTO employees"
+	mock.MatchExpectationsInOrder(false)
+	mock.ExpectExec(query).WithArgs().WillReturnResult(sqlmock.NewResult(0, 1))
+	repo.Save(entity.Employee{})
+
+}
+func TestDeleteEmployee(t *testing.T) {
+	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_, mock := NewMock()
+	query := "DELETE FROM employees WHERE id = ?"
+	mock.MatchExpectationsInOrder(false)
+	mock.ExpectExec(query).WithArgs(emp.ID).WillReturnResult(sqlmock.NewResult(0, 1))
+	repo.Delete(entity.Employee{})
 
 }
