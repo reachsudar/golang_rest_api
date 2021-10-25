@@ -1,0 +1,31 @@
+{
+    "port": 9999,
+    "protocol": "http",
+    "stubs": [
+      {
+        "responses": [
+          {
+            "is": {
+              "statusCode": 200
+            }
+          }
+        ],
+        "predicates": [
+          {
+            "and": [
+              {
+                "equals": {
+                  "method": "GET"
+                }
+              },
+              {
+                "equals": {
+                  "path": "path"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
