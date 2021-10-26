@@ -10,7 +10,7 @@ type Employee struct {
 	Gender       string    `json:"gender"`
 	Salary       float64   `json:"salary"`
 	DOB          time.Time `json:"dob"`
-	Email        string    `json:"email`
+	Email        string    `json:"email"`
 	Phone        int       `json:"phone"`
 	AddressLine1 string    `json:"address1"`
 	AddressLine2 string    `json:"address2"`

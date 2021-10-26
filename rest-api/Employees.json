@@ -1,31 +1,328 @@
 {
-    "port": 9999,
-    "protocol": "http",
-    "stubs": [
-      {
-        "responses": [
-          {
-            "is": {
-              "statusCode": 200
-            }
+  "port": 4545,
+  "protocol": "http",
+  "stubs": [
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/1/super"
           }
-        ],
-        "predicates": [
-          {
-            "and": [
-              {
-                "equals": {
-                  "method": "GET"
-                }
-              },
-              {
-                "equals": {
-                  "path": "path"
-                }
-              }
-            ]
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/1/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+            "superBalance":1111}
           }
-        ]
-      }
-    ]
-  }
+        },
+        
+        {
+          "is": {
+            "statusCode": 404,
+            "headers": {
+              "Content-Type": "application/xml" 
+            },
+            "error":"not Available"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/2/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/2/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+              "superBalance":2222}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/3/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/3/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+              "superBalance":3333}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/4/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/4/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+              "superBalance":4444}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/5/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/5/super",
+              "Content-Type": "application/xml"
+            },
+            "body":{ "employeeId":"1",
+              "superBalance":5555}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/6/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/6/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+              "superBalance":6666}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/7/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/7/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+              "superBalance":7777}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/8/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/8/super",
+              "Content-Type": "application/xml"
+            },
+            "body": { "employeeId":"1",
+              "superBalance":8888}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/9/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/9/super",
+              "Content-Type": "application/xml"
+            },
+            "body":{ "employeeId":"1",
+              "superBalance":9999}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ato/employees/10/super"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Location": "http://localhost:4545/ato/employee/10/super",
+              "Content-Type": "application/xml"
+            },
+            "body":{ "employeeId":"1",
+              "superBalance":101010}
+          }
+        },
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/xml"
+            },
+            "body": "0"
+          }
+        }
+      ]
+    }
+  ]
+}
+

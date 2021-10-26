@@ -42,8 +42,10 @@ func (c *controller) GetAll(ctx *gin.Context) error {
 // GetbyId Controller
 func (c *controller) GetById(ctx *gin.Context) error {
 	employee := c.service.GetById(ctx) //
-
-	ctx.JSON(http.StatusOK, employee)
+	data := gin.H{
+		"Employee Details": employee,
+	}
+	ctx.JSON(http.StatusOK, data)
 	return nil
 }
 
@@ -51,7 +53,7 @@ func (c *controller) GetById(ctx *gin.Context) error {
 func (c *controller) Save(ctx *gin.Context) error {
 	err := c.service.Save(ctx)
 	if err != nil {
-		return err
+		ctx.JSON(500, "Error in Inserting the Data")
 	}
 	ctx.JSON(http.StatusCreated, gin.H{
 		"Message": "New Employee Added",
@@ -63,7 +65,7 @@ func (c *controller) Save(ctx *gin.Context) error {
 func (c *controller) Update(ctx *gin.Context) error {
 	err := c.service.Update(ctx)
 	if err != nil {
-		return err
+		ctx.JSON(500, "Error in Updating the Data")
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"Message": "Updated Employee Details",
@@ -75,7 +77,10 @@ func (c *controller) Update(ctx *gin.Context) error {
 func (c *controller) Delete(ctx *gin.Context) error {
 	err := c.service.Delete(ctx)
 	if err != nil {
-		return err
+		ctx.JSON(500, "Error in Deleting the data")
 	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"Message": "Deleted Employee",
+	})
 	return nil
 }

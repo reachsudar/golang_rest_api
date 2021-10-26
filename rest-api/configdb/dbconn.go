@@ -29,7 +29,7 @@ func Connect() mysql.Config {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	fmt.Println("Connected!")
+	fmt.Println("Connected! to Database")
 	return cfg
 
 }

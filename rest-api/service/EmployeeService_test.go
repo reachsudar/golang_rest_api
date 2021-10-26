@@ -14,8 +14,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//go test -tags=unit -v
 var emp = &entity.Employee{
-	ID:           1,
+	ID:           113,
 	FirstName:    "sudar",
 	MiddleName:   "sasi",
 	LastName:     "Kumar",
@@ -23,7 +24,7 @@ var emp = &entity.Employee{
 	Salary:       12000,
 	DOB:          time.Now(),
 	Email:        "sasisudar@gmail.com",
-	Phone:        9866654323,
+	Phone:        9866654,
 	AddressLine1: "22  yendon road",
 	AddressLine2: "carnegie",
 	State:        "vic",
@@ -53,8 +54,8 @@ func TestGetAll(t *testing.T) {
 
 	rows := sqlmock.NewRows([]string{"id", "firstname", "middlename", "lastname", "gender", "salary",
 		"dob", "email", "phone", "Address1", "address2", "state", "postcode", "tfn", "super"}).AddRow(12, "sudar",
-		"sasi", "kumar", "female", 12000, "2018-12-10T13:49:51.141Z", "sasisudar@gmail.com", 9866654323,
-		"22  yendon road", "carnegie", "vic", 3030, 9876543, 230000.00)
+		"sasi", "kumar", "female", 12000, "2018-12-10T13:49:51.141Z", "sasisudar@gmail.com", 9866654,
+		"22  yendon road", "carnegie", "vic", 3030, 987654, 230000.00)
 
 	mock.ExpectQuery(query).WillReturnRows(rows)
 
@@ -63,7 +64,7 @@ func TestGetAll(t *testing.T) {
 	assert.NotEmpty(t, employees)
 
 }
-func TestGetEmployeeByID(t *testing.T) {
+func TestGetByID(t *testing.T) {
 	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
 
 	if err != nil {
@@ -74,8 +75,8 @@ func TestGetEmployeeByID(t *testing.T) {
 	query := "Select (.+) from employees where id = ?"
 	rows := sqlmock.NewRows([]string{"id", "firstname", "middlename", "lastname", "gender", "salary",
 		"dob", "email", "phone", "Address1", "address2", "state", "postcode", "tfn", "super"}).AddRow(&emp.ID, &emp.FirstName, &emp.MiddleName, &emp.LastName,
-		&emp.Gender, &emp.Salary, &emp.DOB, &emp.Email, &emp.Phone, &emp.AddressLine1,
-		&emp.AddressLine2, &emp.State, &emp.PostCode, &emp.TFN, &emp.SuperBalance)
+		emp.Gender, emp.Salary, emp.DOB, emp.Email, emp.Phone, emp.AddressLine1,
+		emp.AddressLine2, emp.State, emp.PostCode, emp.TFN, emp.SuperBalance)
 
 	mock.ExpectQuery(query).WillReturnRows(rows)
 	ID := strconv.Itoa(emp.ID)
@@ -83,7 +84,7 @@ func TestGetEmployeeByID(t *testing.T) {
 	assert.NotNil(t, employee)
 
 }
-func TestAddEmployee(t *testing.T) {
+func TestSave(t *testing.T) {
 	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
 
 	if err != nil {
@@ -92,12 +93,15 @@ func TestAddEmployee(t *testing.T) {
 
 	_, mock := NewMock()
 	query := "INSERT INTO employees"
-	mock.MatchExpectationsInOrder(false)
-	mock.ExpectExec(query).WithArgs().WillReturnResult(sqlmock.NewResult(0, 1))
-	repo.Save(entity.Employee{})
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectExec().WithArgs(emp.ID, emp.FirstName, emp.MiddleName, emp.LastName,
+		emp.Gender, emp.Salary, emp.DOB, emp.Email, emp.Phone, emp.AddressLine1,
+		emp.AddressLine2, emp.State, emp.PostCode, emp.TFN, emp.SuperBalance).WillReturnResult(sqlmock.NewResult(0, 1))
+	repo.Save(*emp)
+	assert.NoError(t, err)
 
 }
-func TestDeleteEmployee(t *testing.T) {
+func TestDelete(t *testing.T) {
 	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
 
 	if err != nil {
@@ -106,8 +110,29 @@ func TestDeleteEmployee(t *testing.T) {
 
 	_, mock := NewMock()
 	query := "DELETE FROM employees WHERE id = ?"
-	mock.MatchExpectationsInOrder(false)
-	mock.ExpectExec(query).WithArgs(emp.ID).WillReturnResult(sqlmock.NewResult(0, 1))
-	repo.Delete(entity.Employee{})
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectExec().WithArgs().WillReturnResult(sqlmock.NewResult(0, 1))
+	repo.Delete(*emp)
+	assert.NoError(t, err)
+	// mock.MatchExpectationsInOrder(false)
+	// mock.ExpectExec(query).WithArgs(emp.ID).WillReturnResult(sqlmock.NewResult(0, 1))
+	// repo.Delete(entity.Employee{})
 
+}
+func TestUpdate(t *testing.T) {
+	repo, err := repository.NewRepository("mysql", configdb.Connect(), 3, 3)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_, mock := NewMock()
+	query := "Update employees set first_name=?,middle_name=?,last_name=?,gender=?,salary=?,dob=?,email=?,phone=?,address_line1=?,address_line2=?,state=?,post_code=?,tfn=?,super_balance=? WHERE id =?"
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectExec().WithArgs(emp.ID, emp.FirstName, emp.MiddleName, emp.LastName,
+		emp.Gender, emp.Salary, emp.DOB, emp.Email, emp.Phone, emp.AddressLine1,
+		emp.AddressLine2, emp.State, emp.PostCode, emp.TFN, emp.SuperBalance).WillReturnResult(sqlmock.NewResult(0, 0))
+
+	repo.Update(*emp)
+	assert.NoError(t, err)
 }
